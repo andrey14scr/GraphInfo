@@ -1,0 +1,25 @@
+﻿<Window x:Class="GraphInfo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphInfo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="800" FontSize="14">
+    <Grid>
+        <ListView x:Name="FilesList" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="140,0,0,0" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Width="250" Header="Name"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Resolution}" Width="110" Header="Resolution"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Dpi}" Width="70" Header="DPI"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=ColorDepth}" Width="90" Header="Color Depth"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Compression}" Width="90" Header="Compression"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="LoadFile" Content="Выбрать файлы" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="125" Click="LoadFile_Click"/>
+        <Button x:Name="LoadFolder" Content="Выбрать папку" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="125" Click="LoadFolder_Click"/>
+
+    </Grid>
+</Window>
