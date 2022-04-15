@@ -65,8 +65,8 @@ public sealed class FileInfoService
         var width = bmi.PixelWidth;
         var height = bmi.PixelHeight;
         var colorDepth = bmi.Format.BitsPerPixel;
-        var dpiX = bmi.DpiX;
-        var dpiY = bmi.DpiY;
+        var dpiX = Math.Round(bmi.DpiX, 1);
+        var dpiY = Math.Round(bmi.DpiY, 1);
 
         return new GraphicalFileInfo(name, width, height, dpiX, dpiY , colorDepth, compression);
     }

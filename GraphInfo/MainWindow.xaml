@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphInfo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="800" FontSize="14">
+        Title="MainWindow" Height="430" Width="800" FontSize="14">
     <Grid>
-        <ListView x:Name="FilesList" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="140,0,0,0" >
+        <ListView x:Name="FilesList" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="140,0,0,0" Height="353" VerticalAlignment="Top" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Width="250" Header="Name"/>
@@ -20,6 +20,8 @@
         </ListView>
         <Button x:Name="LoadFile" Content="Выбрать файлы" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="125" Click="LoadFile_Click"/>
         <Button x:Name="LoadFolder" Content="Выбрать папку" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="125" Click="LoadFolder_Click"/>
+        <ProgressBar x:Name="LoadProgress" Height="16" Margin="140,358,10,0" VerticalAlignment="Top"/>
+        <Label Content="Progress:" HorizontalAlignment="Left" Margin="10,352,0,0" VerticalAlignment="Top" Width="125"/>
 
     </Grid>
 </Window>

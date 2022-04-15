@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,8 @@ namespace GraphInfo
     public partial class MainWindow : Window
     {
         private readonly FileInfoService _fileInfoService = new();
+        private List<string> _currentFiles = new List<string>();
+        private List<FileInfoViewModel> _info = new List<FileInfoViewModel>();
 
         public MainWindow()
         {
@@ -65,30 +68,48 @@ namespace GraphInfo
 
         private void LoadFiles(IEnumerable<string> files)
         {
-            var list = new ConcurrentBag<FileInfoViewModel>();
-            var tasks = new List<Task>();
+            _currentFiles = files.ToList();
+            LoadProgress.Maximum = _currentFiles.Count();
 
-            foreach (var fileName in files)
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.DoWork += WorkerDoWork;
+            worker.ProgressChanged += WorkerProgressChanged;
+            worker.RunWorkerCompleted += WorkerCompleted;
+
+            worker.RunWorkerAsync();
+        }
+
+        private void WorkerDoWork(object? sender, DoWorkEventArgs e)
+        {
+            _info = new List<FileInfoViewModel>();
+            var progress = 0;
+
+            foreach (var fileName in _currentFiles)
             {
-                var task = new Task(() =>
-                {
-                    var info = _fileInfoService.GetInfo(fileName).ToFileInfoViewModel();
-                    list.Add(info);
-                });
-                tasks.Add(task);
-                task.Start();
+                var info = _fileInfoService.GetInfo(fileName).ToFileInfoViewModel();
+                _info.Add(info);
+                (sender as BackgroundWorker).ReportProgress(++progress);
             }
 
-            Task.WaitAll(tasks.ToArray());
-
-            var res = list.ToList();
             if (FilesList.ItemsSource != null && FilesList.Items.Count != 0)
             {
-                res.AddRange((IEnumerable<FileInfoViewModel>)FilesList.ItemsSource);
+                _info.AddRange((IEnumerable<FileInfoViewModel>)FilesList.ItemsSource);
             }
 
-            res.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
-            FilesList.ItemsSource = res;
+            _info.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+        }
+
+        private void WorkerProgressChanged(object? sender, ProgressChangedEventArgs e)
+        {
+            LoadProgress.Value = e.ProgressPercentage;
+        }
+
+        private void WorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            FilesList.ItemsSource = _info;
+            System.Windows.MessageBox.Show("Loading completed!", "Info");
+            LoadProgress.Value = 0;
         }
     }
 }
