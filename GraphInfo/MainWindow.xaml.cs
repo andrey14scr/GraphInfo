@@ -111,5 +111,11 @@ namespace GraphInfo
             System.Windows.MessageBox.Show("Loading completed!", "Info");
             LoadProgress.Value = 0;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _info = new List<FileInfoViewModel>();
+            FilesList.ItemsSource = _info;
+        }
     }
 }
